@@ -128,19 +128,22 @@ def select_proxy(file_name):
     Parameters:
     - file_name: The name of the text file containing a list of proxy IP addresses.
     """
-    # Load proxy IPs from the text file
-    with open(file_name, "r") as f:
-        proxies = f.readlines()
+    try:
+        # Load proxy IPs from the text file
+        with open(file_name, "r") as f:
+            proxies = f.readlines()
 
-    # Strip whitespace characters (like newlines)
-    proxies = [proxy.strip() for proxy in proxies if proxy.strip()]
+        # Strip whitespace characters (like newlines)
+        proxies = [proxy.strip() for proxy in proxies if proxy.strip()]
 
-    # Select a random proxy IP
-    if proxies:
-        random_proxy = random.choice(proxies)
-        return random_proxy
-    else: 
-        return None
+        # Select a random proxy IP
+        if proxies:
+            random_proxy = random.choice(proxies)
+            return random_proxy
+        else: 
+            return None
+    except Exception as e:
+        print(f"Error during fetching ip in the txt file.")
 
 def main(proxy_file_name,store_data_file_name,output_folder,script_start_with_proxy):
     """
@@ -207,7 +210,7 @@ if __name__ == "__main__":
                         help="Path to the output CSV file for storing data.")
     parser.add_argument('--output_folder', type=str, default="output", 
                         help="Path to the output folder.")
-    parser.add_argument('--script_start_with_proxy', type=str, help='Path to the file containing proxy IPs', required=True)
+    parser.add_argument('--script_start_with_proxy', default=False, type=lambda x: (str(x).lower() == 'true'))
     
     # Parse the arguments
     args = parser.parse_args()
